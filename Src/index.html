@@ -300,7 +300,7 @@
     </div>
     <!-- Sites List -->
     <div aria-labelledby="sites-tab" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="sites-panel" role="tabpanel" tabindex="0" v-if="currentView === 'sites'">
-     <div :aria-label="`Abrir plataforma ${site.name}`" :key="site.id" @click="openPlatform(site)" @keyup.enter="openPlatform(site)" class="card" role="button" tabindex="0" v-for="site in sites">
+     <div :aria-label="`Abrir plataforma ${site.name}`" :key="site.id" @click="handlePlatformClick(site)" @keyup.enter="handlePlatformClick(site)" class="card" role="button" tabindex="0" v-for="site in sites">
       <h3>
        <i :class="site.icon">
        </i>
@@ -313,7 +313,7 @@
     </div>
     <!-- Scripts List -->
     <div aria-labelledby="scripts-tab" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="scripts-panel" role="tabpanel" tabindex="0" v-if="currentView === 'scripts'">
-     <div :aria-label="`Abrir script ${script.name}`" :key="script.id" @click="openScript(script)" @keyup.enter="openScript(script)" class="card" role="button" tabindex="0" v-for="script in scripts">
+     <div :aria-label="`Abrir script ${script.name}`" :key="script.id" @click="handleScriptClick(script)" @keyup.enter="handleScriptClick(script)" class="card" role="button" tabindex="0" v-for="script in scripts">
       <h3>
        <i :class="script.icon">
        </i>
@@ -418,12 +418,12 @@
       <div aria-label="CEO" class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition" role="group" tabindex="0">
        <div aria-hidden="true" class="select-none" style="width: 40px; height: 40px;">
         <!-- Crown SVG -->
-        <svg aria-hidden="true" class="crown-icon" focusable="false" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg aria-hidden="true" class="crown-icon" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
          <path d="M2 9l3 12h14l3-12-5 5-4-7-4 7-5-5z">
          </path>
         </svg>
        </div>
-       <img alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://placekitten.com/80/80" width="80"/>
+       <img alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg" width="80"/>
        <div>
         <h3 class="text-2xl font-semibold">
          CEO
@@ -437,7 +437,7 @@
        <div aria-hidden="true" class="select-none text-yellow-400 text-4xl font-extrabold">
         ★
        </div>
-       <img alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://placekitten.com/81/81" width="80"/>
+       <img alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg" width="80"/>
        <div>
         <h3 class="text-2xl font-semibold">
          Fundador
@@ -451,7 +451,7 @@
        <div aria-hidden="true" class="select-none text-yellow-400 text-4xl font-extrabold">
         👤
        </div>
-       <img alt="Foto de um brigadeiro em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/91552212-f4c0-4cea-c1be-994c40c274e5.jpg" width="80"/>
+       <img alt="Foto de um brigadeiro em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://cdn-icons-png.flaticon.com/512/616/616408.png" width="80"/>
        <div>
         <h3 class="text-2xl font-semibold">
          Apelido do Criador
@@ -505,7 +505,8 @@
           donatePopupVisible: false,
           donateCloseTimeout: null,
           donatePopupCloseBtnVisible: false,
-          donatePopupTimer: null,
+          clickCount: 0,
+          nextPopupThreshold: 10,
           sites: [
             {
               id: 1,
@@ -700,13 +701,31 @@
           if (!this.selectedScript) return;
           navigator.clipboard.writeText(this.selectedScript.code).then(() => {
             this.showToastMessage();
+            this.incrementClickCount();
           });
         },
         copyCodeDiverso() {
           if (!this.selectedDiverso) return;
           navigator.clipboard.writeText(this.selectedDiverso.code).then(() => {
             this.showToastMessage();
+            this.incrementClickCount();
           });
+        },
+        handlePlatformClick(platform) {
+          this.openPlatform(platform);
+          this.incrementClickCount();
+        },
+        handleScriptClick(script) {
+          this.openScript(script);
+          this.incrementClickCount();
+        },
+        incrementClickCount() {
+          this.clickCount++;
+          if (this.clickCount >= this.nextPopupThreshold) {
+            this.showDonatePopup();
+            this.nextPopupThreshold *= 2;
+            this.clickCount = 0;
+          }
         },
         showToastMessage() {
           if (this.toastTimeout) {
@@ -724,6 +743,7 @@
           window.open('https://pixgg.com/Lks_modder', '_blank', 'noopener');
         },
         showDonatePopup() {
+          if (this.donatePopupVisible) return;
           this.donatePopupVisible = true;
           this.donatePopupCloseBtnVisible = false;
           const popup = document.getElementById('donate-popup');
@@ -737,26 +757,26 @@
               closeBtn.style.pointerEvents = 'auto';
             }
           }, 5000);
+          // Auto close popup after 2 minutes if not closed
+          if (this.donateCloseTimeout) clearTimeout(this.donateCloseTimeout);
+          this.donateCloseTimeout = setTimeout(() => {
+            this.closeDonatePopup();
+          }, 120000);
         },
         closeDonatePopup() {
           this.donatePopupVisible = false;
           this.donatePopupCloseBtnVisible = false;
           const popup = document.getElementById('donate-popup');
           popup.classList.remove('show');
-        },
-        scheduleDonatePopup() {
-          // Random time between 3 and 5 minutes in ms
-          const min = 180000;
-          const max = 300000;
-          const delay = Math.floor(Math.random() * (max - min + 1)) + min;
-          setTimeout(() => {
-            this.showDonatePopup();
-            // Schedule next popup after closing
-            this.donatePopupTimer = setTimeout(() => {
-              this.closeDonatePopup();
-              this.scheduleDonatePopup();
-            }, 120000); // auto close after 2 minutes if user doesn't close
-          }, delay);
+          const closeBtn = popup.querySelector('.close-btn');
+          if (closeBtn) {
+            closeBtn.style.opacity = '0';
+            closeBtn.style.pointerEvents = 'none';
+          }
+          if (this.donateCloseTimeout) {
+            clearTimeout(this.donateCloseTimeout);
+            this.donateCloseTimeout = null;
+          }
         },
       },
       mounted() {
@@ -770,10 +790,8 @@
           closeBtn.style.opacity = '0';
           closeBtn.style.pointerEvents = 'none';
         }
-        // Start scheduling donation popup
-        this.scheduleDonatePopup();
       },
     }).mount('#app');
   </script>
  </body>
-</html>
+     </html>
