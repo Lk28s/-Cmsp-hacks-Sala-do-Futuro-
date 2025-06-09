@@ -158,87 +158,6 @@
       font-size: 1.5rem;
       text-shadow: 0 0 8px #22c55e;
     }
-    /* Popup styles */
-    #donate-popup-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(18, 18, 18, 0.75);
-      backdrop-filter: blur(6px);
-      z-index: 9998;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-    #donate-popup-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #donate-popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #1f2937;
-      border-radius: 1rem;
-      padding: 2rem 3rem;
-      box-shadow: 0 0 25px #7c3aedcc;
-      max-width: 90vw;
-      width: 400px;
-      color: #d1d5db;
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-      z-index: 9999;
-    }
-    #donate-popup.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #donate-popup h3 {
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
-      color: #7c3aed;
-      text-shadow: 0 0 8px #7c3aed;
-    }
-    #donate-popup p {
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      color: #c4b5fd;
-      text-shadow: 0 0 4px #a78bfa;
-    }
-    #donate-popup button {
-      background-color: #7c3aed;
-      color: white;
-      padding: 0.75rem 2rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      box-shadow: 0 0 15px #a78bfa, inset 0 0 15px #a78bfa;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    #donate-popup button:hover,
-    #donate-popup button:focus-visible {
-      background-color: #a78bfa;
-      outline: none;
-    }
-    #donate-popup .close-btn {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background: transparent;
-      border: none;
-      color: #d1d5db;
-      font-size: 1.5rem;
-      cursor: pointer;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 1s ease;
-    }
-    #donate-popup.show .close-btn {
-      opacity: 1;
-      pointer-events: auto;
-    }
     /* Crown icon style */
     .crown-icon {
       width: 1.5rem;
@@ -488,23 +407,6 @@
     Código copiado com sucesso!
    </span>
   </div>
-  <!-- Donation Popup Overlay -->
-  <div id="donate-popup-overlay" @click="closeDonatePopup" :class="{show: donatePopupVisible}"></div>
-  <!-- Donation Popup -->
-  <div aria-describedby="donate-desc" aria-labelledby="donate-title" aria-modal="true" id="donate-popup" role="dialog" tabindex="-1" :class="{show: donatePopupVisible}">
-   <button @click="closeDonatePopup" aria-label="Fechar popup de doação" class="close-btn">
-    ×
-   </button>
-   <h3 id="donate-title">
-    Doação
-   </h3>
-   <p id="donate-desc">
-    Ajude os dono do site com quaisquer valor que queira, apenas o ajude a manter o site😊.
-   </p>
-   <button @click="handleDonateNow">
-    Doar agora!
-   </button>
-  </div>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js">
   </script>
   <script>
@@ -519,9 +421,6 @@
           selectedDiverso: null,
           showToast: false,
           toastTimeout: null,
-          donatePopupVisible: false,
-          donateCloseTimeout: null,
-          donatePopupCloseBtnVisible: false,
           clickCount: 0,
           nextPopupThreshold: 10,
           sites: [
@@ -739,7 +638,7 @@
         incrementClickCount() {
           this.clickCount++;
           if (this.clickCount >= this.nextPopupThreshold) {
-            this.showDonatePopup();
+            // Removed popup call as requested
             this.nextPopupThreshold *= 2;
             this.clickCount = 0;
           }
@@ -759,64 +658,13 @@
         openDonate() {
           window.open('https://pixgg.com/Lks_modder', '_blank', 'noopener');
         },
-        showDonatePopup() {
-          if (this.donatePopupVisible) return;
-          this.donatePopupVisible = true;
-          this.donatePopupCloseBtnVisible = false;
-          const popup = document.getElementById('donate-popup');
-          const overlay = document.getElementById('donate-popup-overlay');
-          popup.classList.add('show');
-          overlay.classList.add('show');
-          // Show close button after 5 seconds with fade-in
-          setTimeout(() => {
-            this.donatePopupCloseBtnVisible = true;
-            const closeBtn = popup.querySelector('.close-btn');
-            if (closeBtn) {
-              closeBtn.style.opacity = '1';
-              closeBtn.style.pointerEvents = 'auto';
-            }
-          }, 5000);
-          // Auto close popup after 2 minutes if not closed
-          if (this.donateCloseTimeout) clearTimeout(this.donateCloseTimeout);
-          this.donateCloseTimeout = setTimeout(() => {
-            this.closeDonatePopup();
-          }, 120000);
-        },
-        closeDonatePopup() {
-          this.donatePopupVisible = false;
-          this.donatePopupCloseBtnVisible = false;
-          const popup = document.getElementById('donate-popup');
-          const overlay = document.getElementById('donate-popup-overlay');
-          popup.classList.remove('show');
-          overlay.classList.remove('show');
-          const closeBtn = popup.querySelector('.close-btn');
-          if (closeBtn) {
-            closeBtn.style.opacity = '0';
-            closeBtn.style.pointerEvents = 'none';
-          }
-          if (this.donateCloseTimeout) {
-            clearTimeout(this.donateCloseTimeout);
-            this.donateCloseTimeout = null;
-          }
-        },
-        handleDonateNow() {
-          this.openDonate();
-          this.closeDonatePopup();
-        },
       },
       mounted() {
         // Ensure toast is hidden initially
         const toastEl = document.getElementById('toast');
         toastEl.classList.remove('show');
-        // Ensure donate popup close button hidden initially
-        const popup = document.getElementById('donate-popup');
-        const closeBtn = popup.querySelector('.close-btn');
-        if (closeBtn) {
-          closeBtn.style.opacity = '0';
-          closeBtn.style.pointerEvents = 'none';
-        }
       },
     }).mount('#app');
   </script>
  </body>
-   </html>
+</html>
