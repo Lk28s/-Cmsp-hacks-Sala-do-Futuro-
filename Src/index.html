@@ -1,19 +1,16 @@
 <html class="scroll-smooth" lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1" name="viewport" />
-  <title>Futu SYNC</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    rel="stylesheet"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Futu SYNC
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
   <style>
-    body {
+   body {
       font-family: 'Poppins', sans-serif;
       background-color: #121212;
       color: #d1d5db;
@@ -160,301 +157,341 @@
       font-size: 1.5rem;
       text-shadow: 0 0 8px #22c55e;
     }
+    /* Popup styles */
+    #donate-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1f2937;
+      border-radius: 1rem;
+      padding: 2rem 3rem;
+      box-shadow: 0 0 25px #7c3aedcc;
+      max-width: 90vw;
+      width: 400px;
+      color: #d1d5db;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 10000;
+    }
+    #donate-popup.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #donate-popup h3 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: #7c3aed;
+      text-shadow: 0 0 8px #7c3aed;
+    }
+    #donate-popup p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      color: #c4b5fd;
+      text-shadow: 0 0 4px #a78bfa;
+    }
+    #donate-popup button {
+      background-color: #7c3aed;
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      box-shadow: 0 0 15px #a78bfa, inset 0 0 15px #a78bfa;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #donate-popup button:hover,
+    #donate-popup button:focus-visible {
+      background-color: #a78bfa;
+      outline: none;
+    }
+    #donate-popup .close-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: transparent;
+      border: none;
+      color: #d1d5db;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+    }
+    #donate-popup.show .close-btn {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    /* Crown icon style */
+    .crown-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: #fbbf24;
+      filter: drop-shadow(0 0 3px #fbbf24);
+    }
   </style>
-</head>
-<body>
-  <div id="app" class="max-w-6xl mx-auto p-6">
-    <!-- Header -->
-    <header class="mb-10 text-center">
-      <h1>Futu SYNC</h1>
-      <p class="text-lg max-w-3xl mx-auto font-medium">
-        Bem-vindo ao Futu SYNC, onde você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+ </head>
+ <body>
+  <div class="max-w-6xl mx-auto p-6" id="app">
+   <!-- Header -->
+   <header class="mb-10 text-center">
+    <h1>
+     Futu SYNC
+    </h1>
+    <p class="text-lg max-w-3xl mx-auto font-medium">
+     Bem-vindo ao Futu SYNC, onde você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+    </p>
+   </header>
+   <!-- Navigation Tabs -->
+   <nav aria-label="Navegação principal" class="flex justify-center gap-6 mb-12 flex-wrap" role="tablist">
+    <button :aria-selected="currentView === 'home'" :class="{'active': currentView === 'home'}" @click="setView('home')" aria-controls="home-panel" id="home-tab" role="tab">
+     Início
+    </button>
+    <button :aria-selected="currentView === 'sites'" :class="{'active': currentView === 'sites'}" @click="setView('sites')" aria-controls="sites-panel" id="sites-tab" role="tab">
+     Sites
+    </button>
+    <button :aria-selected="currentView === 'scripts'" :class="{'active': currentView === 'scripts'}" @click="setView('scripts')" aria-controls="scripts-panel" id="scripts-tab" role="tab">
+     Scripts
+    </button>
+    <button :aria-selected="currentView === 'diversos'" :class="{'active': currentView === 'diversos'}" @click="setView('diversos')" aria-controls="diversos-panel" id="diversos-tab" role="tab">
+     Diversos
+    </button>
+    <button :aria-selected="currentView === 'about'" :class="{'active': currentView === 'about'}" @click="setView('about')" aria-controls="about-panel" id="about-tab" role="tab">
+     Sobre
+    </button>
+    <button :aria-selected="currentView === 'team'" :class="{'active': currentView === 'team'}" @click="setView('team')" aria-controls="team-panel" id="team-tab" role="tab">
+     Equipe
+    </button>
+    <button @click="openDonate" aria-label="Doações" class="bg-lime-500 hover:bg-lime-600 text-gray-900 font-semibold px-6 py-3 rounded-xl shadow-lg transition" type="button">
+     <i class="fas fa-hand-holding-heart">
+     </i>
+     Doação
+    </button>
+   </nav>
+   <!-- Main Content -->
+   <section>
+    <!-- Home View -->
+    <div aria-labelledby="home-tab" class="text-center space-y-8" id="home-panel" role="tabpanel" tabindex="0" v-if="currentView === 'home'">
+     <h2>
+      Bem-vindo ao Futu SYNC
+     </h2>
+     <p class="max-w-3xl mx-auto text-xl leading-relaxed font-medium">
+      Aqui você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+     </p>
+     <div class="flex flex-wrap justify-center gap-8 mt-8">
+      <button @click="setView('sites')">
+       🔎 Sites
+      </button>
+      <button @click="setView('scripts')">
+       &lt;/&gt; Scripts
+      </button>
+      <button @click="setView('diversos')">
+       🎉 Diversos
+      </button>
+      <button @click="setView('about')">
+       ℹ️ Sobre
+      </button>
+      <button @click="setView('team')">
+       👥 Equipe
+      </button>
+     </div>
+    </div>
+    <!-- Sites List -->
+    <div aria-labelledby="sites-tab" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="sites-panel" role="tabpanel" tabindex="0" v-if="currentView === 'sites'">
+     <div :aria-label="`Abrir plataforma ${site.name}`" :key="site.id" @click="openPlatform(site)" @keyup.enter="openPlatform(site)" class="card" role="button" tabindex="0" v-for="site in sites">
+      <h3>
+       <i :class="site.icon">
+       </i>
+       {{ site.name }}
+      </h3>
+      <p>
+       {{ site.shortDesc }}
       </p>
-    </header>
-
-    <!-- Navigation Tabs -->
-    <nav class="flex justify-center gap-6 mb-12 flex-wrap" role="tablist" aria-label="Navegação principal">
-      <button
-        :class="{'active': currentView === 'home'}"
-        @click="setView('home')"
-        role="tab"
-        :aria-selected="currentView === 'home'"
-        aria-controls="home-panel"
-        id="home-tab"
-      >
-        Início
-      </button>
-      <button
-        :class="{'active': currentView === 'sites'}"
-        @click="setView('sites')"
-        role="tab"
-        :aria-selected="currentView === 'sites'"
-        aria-controls="sites-panel"
-        id="sites-tab"
-      >
-        Sites
-      </button>
-      <button
-        :class="{'active': currentView === 'scripts'}"
-        @click="setView('scripts')"
-        role="tab"
-        :aria-selected="currentView === 'scripts'"
-        aria-controls="scripts-panel"
-        id="scripts-tab"
-      >
-        Scripts
-      </button>
-      <button
-        :class="{'active': currentView === 'about'}"
-        @click="setView('about')"
-        role="tab"
-        :aria-selected="currentView === 'about'"
-        aria-controls="about-panel"
-        id="about-tab"
-      >
-        Sobre
-      </button>
-      <button
-        :class="{'active': currentView === 'team'}"
-        @click="setView('team')"
-        role="tab"
-        :aria-selected="currentView === 'team'"
-        aria-controls="team-panel"
-        id="team-tab"
-      >
-        Equipe
-      </button>
-    </nav>
-
-    <!-- Main Content -->
-    <section>
-      <!-- Home View -->
-      <div v-if="currentView === 'home'" id="home-panel" role="tabpanel" aria-labelledby="home-tab" tabindex="0" class="text-center space-y-8">
-        <h2>Bem-vindo ao Futu SYNC</h2>
-        <p class="max-w-3xl mx-auto text-xl leading-relaxed font-medium">
-          Aqui você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+     </div>
+    </div>
+    <!-- Scripts List -->
+    <div aria-labelledby="scripts-tab" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="scripts-panel" role="tabpanel" tabindex="0" v-if="currentView === 'scripts'">
+     <div :aria-label="`Abrir script ${script.name}`" :key="script.id" @click="openScript(script)" @keyup.enter="openScript(script)" class="card" role="button" tabindex="0" v-for="script in scripts">
+      <h3>
+       <i :class="script.icon">
+       </i>
+       {{ script.name }}
+      </h3>
+      <p>
+       {{ script.shortDesc }}
+      </p>
+     </div>
+    </div>
+    <!-- Diversos List -->
+    <div aria-labelledby="diversos-tab" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="diversos-panel" role="tabpanel" tabindex="0" v-if="currentView === 'diversos'">
+     <div :aria-label="`Abrir item diversos ${diverso.name}`" :key="diverso.id" @click="openDiverso(diverso)" @keyup.enter="openDiverso(diverso)" class="card" role="button" tabindex="0" v-for="diverso in diversos">
+      <h3>
+       <i :class="diverso.icon">
+       </i>
+       {{ diverso.name }}
+      </h3>
+      <p>
+       {{ diverso.shortDesc }}
+      </p>
+     </div>
+    </div>
+    <!-- Platform Detail -->
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'platformDetail'">
+     <button @click="setView('sites')" aria-label="Voltar para sites" class="mb-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-arrow-left">
+      </i>
+      Voltar
+     </button>
+     <h2 class="text-3xl font-extrabold mb-6 text-purple-300 drop-shadow-lg">
+      {{ selectedPlatform.name }}
+     </h2>
+     <p class="mb-8 text-purple-100 text-lg font-medium leading-relaxed drop-shadow-sm">
+      {{ selectedPlatform.description }}
+     </p>
+     <a :href="selectedPlatform.hackLink" aria-label="Abrir link do hack da plataforma" class="inline-block bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition" rel="noopener noreferrer" target="_blank">
+      Abrir Hack da Plataforma
+     </a>
+    </div>
+    <!-- Script Detail -->
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'scriptDetail'">
+     <button @click="setView('scripts')" aria-label="Voltar para scripts" class="mb-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-arrow-left">
+      </i>
+      Voltar
+     </button>
+     <h2 class="text-3xl font-extrabold mb-6 text-purple-300 drop-shadow-lg">
+      {{ selectedScript.name }}
+     </h2>
+     <p class="mb-8 text-purple-100 text-lg font-medium leading-relaxed drop-shadow-sm">
+      {{ selectedScript.description }}
+     </p>
+     <pre class="select-text whitespace-pre-wrap" ref="codeBlock">{{ selectedScript.code }}</pre>
+     <button @click="copyCode" aria-label="Copiar código do script" class="mt-6 bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-copy">
+      </i>
+      Copiar Código
+     </button>
+    </div>
+    <!-- Diversos Detail -->
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'diversoDetail'">
+     <button @click="setView('diversos')" aria-label="Voltar para diversos" class="mb-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-arrow-left">
+      </i>
+      Voltar
+     </button>
+     <h2 class="text-3xl font-extrabold mb-6 text-purple-300 drop-shadow-lg">
+      {{ selectedDiverso.name }}
+     </h2>
+     <p class="mb-8 text-purple-100 text-lg font-medium leading-relaxed drop-shadow-sm">
+      {{ selectedDiverso.description }}
+     </p>
+     <pre class="select-text whitespace-pre-wrap" ref="codeBlockDiverso" v-if="selectedDiverso.code">{{ selectedDiverso.code }}</pre>
+     <button @click="copyCodeDiverso" aria-label="Copiar código do item diversos" class="mt-6 bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition flex items-center gap-3" v-if="selectedDiverso.code">
+      <i class="fas fa-copy">
+      </i>
+      Copiar Código
+     </button>
+     <a :href="selectedDiverso.hackLink" aria-label="Abrir link do hack do item diversos" class="inline-block mt-6 bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition" rel="noopener noreferrer" target="_blank" v-if="selectedDiverso.hackLink">
+      Abrir Hack
+     </a>
+    </div>
+    <!-- About -->
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'about'">
+     <h2>
+      Sobre
+     </h2>
+     <p class="mb-6 leading-relaxed text-lg font-medium">
+      Olá, bem-vindo ao site do Futu SYNC! Aqui vocês vão encontrar os melhores métodos, scripts e hacks para facilitar e automatizar suas tarefas da escola. Temos TODAS as plataformas do Sala do Futuro — então aproveitem!
+     </p>
+     <p class="leading-relaxed text-lg font-medium">
+      Nossa equipe é formada por desenvolvedores e estudantes que já utilizam essas plataformas e querem compartilhar seus conhecimentos para ajudar outros alunos a terem sucesso.
+     </p>
+    </div>
+    <!-- Team -->
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'team'">
+     <h2>
+      Equipe
+     </h2>
+     <div class="flex flex-col sm:flex-row justify-center gap-10">
+      <div aria-label="CEO" class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition" role="group" tabindex="0">
+       <div aria-hidden="true" class="select-none" style="width: 40px; height: 40px;">
+        <!-- Crown SVG -->
+        <svg aria-hidden="true" class="crown-icon" focusable="false" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M2 9l3 12h14l3-12-5 5-4-7-4 7-5-5z">
+         </path>
+        </svg>
+       </div>
+       <img alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://placekitten.com/80/80" width="80"/>
+       <div>
+        <h3 class="text-2xl font-semibold">
+         CEO
+        </h3>
+        <p class="text-yellow-300 font-medium">
+         Lks Modder
         </p>
-        <div class="flex flex-wrap justify-center gap-8 mt-8">
-          <button @click="setView('sites')">🔎 Sites</button>
-          <button @click="setView('scripts')">&lt;/&gt; Scripts</button>
-          <button @click="setView('about')">ℹ️ Sobre</button>
-          <button @click="setView('team')">👥 Equipe</button>
-        </div>
+       </div>
       </div>
-
-      <!-- Sites List -->
-      <div v-if="currentView === 'sites'" id="sites-panel" role="tabpanel" aria-labelledby="sites-tab" tabindex="0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        <div
-          v-for="site in sites"
-          :key="site.id"
-          @click="openPlatform(site)"
-          @keyup.enter="openPlatform(site)"
-          tabindex="0"
-          role="button"
-          :aria-label="`Abrir plataforma ${site.name}`"
-          class="card"
-        >
-          <h3><i :class="site.icon"></i> {{ site.name }}</h3>
-          <p>{{ site.shortDesc }}</p>
-        </div>
-      </div>
-
-      <!-- Scripts List -->
-      <div v-if="currentView === 'scripts'" id="scripts-panel" role="tabpanel" aria-labelledby="scripts-tab" tabindex="0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        <div
-          v-for="script in scripts"
-          :key="script.id"
-          @click="openScript(script)"
-          @keyup.enter="openScript(script)"
-          tabindex="0"
-          role="button"
-          :aria-label="`Abrir script ${script.name}`"
-          class="card"
-        >
-          <h3><i :class="script.icon"></i> {{ script.name }}</h3>
-          <p>{{ script.shortDesc }}</p>
-        </div>
-      </div>
-
-      <!-- Platform Detail -->
-      <div
-        v-if="currentView === 'platformDetail'"
-        class="card max-w-4xl mx-auto"
-        tabindex="0"
-        role="region"
-        aria-live="polite"
-      >
-        <button
-          @click="setView('sites')"
-          aria-label="Voltar para sites"
-          class="mb-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3"
-        >
-          <i class="fas fa-arrow-left"></i> Voltar
-        </button>
-        <h2 class="text-3xl font-extrabold mb-6 text-purple-300 drop-shadow-lg">
-          {{ selectedPlatform.name }}
-        </h2>
-        <p class="mb-8 text-purple-100 text-lg font-medium leading-relaxed drop-shadow-sm">
-          {{ selectedPlatform.description }}
+      <div aria-label="Fundador" class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition" role="group" tabindex="0">
+       <div aria-hidden="true" class="select-none text-yellow-400 text-4xl font-extrabold">
+        ★
+       </div>
+       <img alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://placekitten.com/81/81" width="80"/>
+       <div>
+        <h3 class="text-2xl font-semibold">
+         Fundador
+        </h3>
+        <p class="text-yellow-300 font-medium">
+         Lks Modder
         </p>
-        <a
-          :href="selectedPlatform.hackLink"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-block bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition"
-          aria-label="Abrir link do hack da plataforma"
-        >
-          Abrir Hack da Plataforma
-        </a>
+       </div>
       </div>
-
-      <!-- Script Detail -->
-      <div
-        v-if="currentView === 'scriptDetail'"
-        class="card max-w-4xl mx-auto"
-        tabindex="0"
-        role="region"
-        aria-live="polite"
-      >
-        <button
-          @click="setView('scripts')"
-          aria-label="Voltar para scripts"
-          class="mb-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3"
-        >
-          <i class="fas fa-arrow-left"></i> Voltar
-        </button>
-        <h2 class="text-3xl font-extrabold mb-6 text-purple-300 drop-shadow-lg">
-          {{ selectedScript.name }}
-        </h2>
-        <p class="mb-8 text-purple-100 text-lg font-medium leading-relaxed drop-shadow-sm">
-          {{ selectedScript.description }}
+      <div aria-label="Apelido do Criador" class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition" role="group" tabindex="0">
+       <div aria-hidden="true" class="select-none text-yellow-400 text-4xl font-extrabold">
+        👤
+       </div>
+       <img alt="Foto de um brigadeiro em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://storage.googleapis.com/a1aa/image/91552212-f4c0-4cea-c1be-994c40c274e5.jpg" width="80"/>
+       <div>
+        <h3 class="text-2xl font-semibold">
+         Apelido do Criador
+        </h3>
+        <p class="text-yellow-300 font-medium">
+         Brigadeirão
         </p>
-        <pre ref="codeBlock" class="select-text whitespace-pre-wrap">{{ selectedScript.code }}</pre>
-        <button
-          @click="copyCode"
-          aria-label="Copiar código do script"
-          class="mt-6 bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition flex items-center gap-3"
-        >
-          <i class="fas fa-copy"></i> Copiar Código
-        </button>
+       </div>
       </div>
-
-      <!-- About -->
-      <div
-        v-if="currentView === 'about'"
-        class="card max-w-4xl mx-auto"
-        tabindex="0"
-        role="region"
-        aria-live="polite"
-      >
-        <h2>Sobre</h2>
-        <p class="mb-6 leading-relaxed text-lg font-medium">
-          Olá, bem-vindo ao site do Futu SYNC! Aqui vocês vão encontrar os melhores métodos, scripts e hacks para facilitar e automatizar suas tarefas da escola. Temos TODAS as plataformas do Sala do Futuro — então aproveitem!
-        </p>
-        <p class="leading-relaxed text-lg font-medium">
-          Nossa equipe é formada por desenvolvedores e estudantes que já utilizam essas plataformas e querem compartilhar seus conhecimentos para ajudar outros alunos a terem sucesso.
-        </p>
-      </div>
-
-      <!-- Team -->
-      <div
-        v-if="currentView === 'team'"
-        class="card max-w-4xl mx-auto"
-        tabindex="0"
-        role="region"
-        aria-live="polite"
-      >
-        <h2>Equipe</h2>
-        <div class="flex flex-col sm:flex-row justify-center gap-10">
-          <div
-            class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition"
-            tabindex="0"
-            role="group"
-            aria-label="CEO"
-          >
-            <div
-              class="flex flex-col items-center justify-center text-yellow-400 text-4xl font-extrabold select-none"
-              aria-hidden="true"
-            >
-              ★
-            </div>
-            <img
-              src="https://placehold.co/80x80/png?text=CEO"
-              alt="Foto do CEO em uma caixa quadrada com bordas arredondadas"
-              class="w-20 h-20 rounded-2xl object-cover shadow-md"
-              width="80"
-              height="80"
-              loading="lazy"
-            />
-            <div>
-              <h3 class="text-2xl font-semibold">CEO</h3>
-              <p class="text-yellow-300 font-medium">Lks Modder</p>
-            </div>
-          </div>
-          <div
-            class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition"
-            tabindex="0"
-            role="group"
-            aria-label="Co-fundador"
-          >
-            <div
-              class="flex flex-col items-center justify-center text-yellow-400 text-4xl font-extrabold select-none"
-              aria-hidden="true"
-            >
-              ★
-            </div>
-            <img
-              src="https://placehold.co/80x80/png?text=Co-fundador"
-              alt="Foto do Co-fundador em uma caixa quadrada com bordas arredondadas"
-              class="w-20 h-20 rounded-2xl object-cover shadow-md"
-              width="80"
-              height="80"
-              loading="lazy"
-            />
-            <div>
-              <h3 class="text-2xl font-semibold">Fundador</h3>
-              <p class="text-yellow-300 font-medium">Lks Modder</p>
-            </div>
-          </div>
-          <div
-            class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition"
-            tabindex="0"
-            role="group"
-            aria-label="Fundador"
-          >
-            <div
-              class="flex flex-col items-center justify-center text-yellow-400 text-4xl font-extrabold select-none"
-              aria-hidden="true"
-            >
-              ★
-            </div>
-            <img
-              src="https://placehold.co/80x80/png?text=Fundador"
-              alt="Foto do Fundador em uma caixa quadrada com bordas arredondadas"
-              class="w-20 h-20 rounded-2xl object-cover shadow-md"
-              width="80"
-              height="80"
-              loading="lazy"
-            />
-            <div>
-              <h3 class="text-2xl font-semibold">Estudando Criador</h3>
-              <p class="text-yellow-300 font-medium">Miguel Luan</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+     </div>
+    </div>
+   </section>
   </div>
-
   <!-- Toast -->
-  <div id="toast" role="alert" aria-live="assertive" aria-atomic="true" class="">
-    <i class="fas fa-check-circle"></i>
-    <span>Código copiado com sucesso!</span>
+  <div aria-atomic="true" aria-live="assertive" class="" id="toast" role="alert">
+   <i class="fas fa-check-circle">
+   </i>
+   <span>
+    Código copiado com sucesso!
+   </span>
   </div>
-
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!-- Donation Popup -->
+  <div aria-describedby="donate-desc" aria-labelledby="donate-title" aria-modal="true" class="" id="donate-popup" role="dialog" tabindex="-1">
+   <button @click="closeDonatePopup" aria-label="Fechar popup de doação" class="close-btn">
+    ×
+   </button>
+   <h3 id="donate-title">
+    Doação
+   </h3>
+   <p id="donate-desc">
+    Ajude os dono do site com quaisquer valor que queira, apenas o ajude a manter o site😊.
+   </p>
+   <button @click="openDonate">
+    Doar agora!
+   </button>
+  </div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js">
+  </script>
   <script>
-    const { createApp } = Vue;
+   const { createApp } = Vue;
 
     createApp({
       data() {
@@ -462,8 +499,13 @@
           currentView: 'home',
           selectedPlatform: null,
           selectedScript: null,
+          selectedDiverso: null,
           showToast: false,
           toastTimeout: null,
+          donatePopupVisible: false,
+          donateCloseTimeout: null,
+          donatePopupCloseBtnVisible: false,
+          donatePopupTimer: null,
           sites: [
             {
               id: 1,
@@ -579,6 +621,60 @@
 // ==/UserScript==`,
             },
           ],
+          diversos: [
+            {
+              id: 1,
+              name: 'Kahoot Hack',
+              icon: 'fas fa-gamepad',
+              shortDesc: 'Scripts e hacks para Kahoot e sites de diversão.',
+              description: 'Diversos scripts para facilitar jogos e diversão em plataformas como Kahoot.',
+              code: `// Exemplo de script para Kahoot
+(function() {
+  alert('Kahoot Hack ativado!');
+  // Seu código aqui
+})();`,
+              hackLink: 'https://example.com/kahoot-hack',
+            },
+            {
+              id: 2,
+              name: 'Quizizz Automação',
+              icon: 'fas fa-question-circle',
+              shortDesc: 'Script para automatizar tarefas no Quizizz.',
+              description: 'Automatize respostas e tarefas no Quizizz para facilitar seus estudos.',
+              code: `// Script para Quizizz
+(function() {
+  console.log('Quizizz Automação ativada!');
+  // Seu código aqui
+})();`,
+              hackLink: 'https://example.com/quizizz-hack',
+            },
+            {
+              id: 3,
+              name: 'Google Classroom Helper',
+              icon: 'fas fa-chalkboard-teacher',
+              shortDesc: 'Scripts para facilitar o uso do Google Classroom.',
+              description: 'Melhore sua experiência e automatize tarefas no Google Classroom.',
+              code: `// Script para Google Classroom
+(function() {
+  console.log('Google Classroom Helper ativado!');
+  // Seu código aqui
+})();`,
+              hackLink: 'https://example.com/google-classroom-helper',
+            },
+            {
+              id: 4,
+              name: 'Socrative Assistente',
+              icon: 'fas fa-clipboard-list',
+              shortDesc: 'Assistente para Socrative com scripts úteis.',
+              description: 'Facilite o uso do Socrative com scripts que automatizam tarefas repetitivas.',
+              code: `// Script para Socrative
+(function() {
+  console.log('Socrative Assistente ativado!');
+  // Seu código aqui
+})();`,
+              hackLink: 'https://example.com/socrative-assistente',
+            },
+          ],
         };
       },
       methods: {
@@ -586,6 +682,7 @@
           this.currentView = view;
           this.selectedPlatform = null;
           this.selectedScript = null;
+          this.selectedDiverso = null;
         },
         openPlatform(platform) {
           this.selectedPlatform = platform;
@@ -595,9 +692,19 @@
           this.selectedScript = script;
           this.currentView = 'scriptDetail';
         },
+        openDiverso(diverso) {
+          this.selectedDiverso = diverso;
+          this.currentView = 'diversoDetail';
+        },
         copyCode() {
           if (!this.selectedScript) return;
           navigator.clipboard.writeText(this.selectedScript.code).then(() => {
+            this.showToastMessage();
+          });
+        },
+        copyCodeDiverso() {
+          if (!this.selectedDiverso) return;
+          navigator.clipboard.writeText(this.selectedDiverso.code).then(() => {
             this.showToastMessage();
           });
         },
@@ -613,13 +720,60 @@
             this.showToast = false;
           }, 5000);
         },
+        openDonate() {
+          window.open('https://pixgg.com/Lks_modder', '_blank', 'noopener');
+        },
+        showDonatePopup() {
+          this.donatePopupVisible = true;
+          this.donatePopupCloseBtnVisible = false;
+          const popup = document.getElementById('donate-popup');
+          popup.classList.add('show');
+          // Show close button after 5 seconds with fade-in
+          setTimeout(() => {
+            this.donatePopupCloseBtnVisible = true;
+            const closeBtn = popup.querySelector('.close-btn');
+            if (closeBtn) {
+              closeBtn.style.opacity = '1';
+              closeBtn.style.pointerEvents = 'auto';
+            }
+          }, 5000);
+        },
+        closeDonatePopup() {
+          this.donatePopupVisible = false;
+          this.donatePopupCloseBtnVisible = false;
+          const popup = document.getElementById('donate-popup');
+          popup.classList.remove('show');
+        },
+        scheduleDonatePopup() {
+          // Random time between 3 and 5 minutes in ms
+          const min = 180000;
+          const max = 300000;
+          const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+          setTimeout(() => {
+            this.showDonatePopup();
+            // Schedule next popup after closing
+            this.donatePopupTimer = setTimeout(() => {
+              this.closeDonatePopup();
+              this.scheduleDonatePopup();
+            }, 120000); // auto close after 2 minutes if user doesn't close
+          }, delay);
+        },
       },
       mounted() {
         // Ensure toast is hidden initially
         const toastEl = document.getElementById('toast');
         toastEl.classList.remove('show');
+        // Ensure donate popup close button hidden initially
+        const popup = document.getElementById('donate-popup');
+        const closeBtn = popup.querySelector('.close-btn');
+        if (closeBtn) {
+          closeBtn.style.opacity = '0';
+          closeBtn.style.pointerEvents = 'none';
+        }
+        // Start scheduling donation popup
+        this.scheduleDonatePopup();
       },
     }).mount('#app');
   </script>
-</body>
+ </body>
 </html>
