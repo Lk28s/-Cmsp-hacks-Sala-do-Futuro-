@@ -1,0 +1,577 @@
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FSYNC Script e Hacksl</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #e0e7ff;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    pre {
+      background: #0f172a;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace, monospace;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      user-select: text;
+      white-space: pre-wrap;
+      word-break: break-word;
+      box-shadow: 0 4px 8px rgb(0 0 0 / 0.3);
+    }
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes slideOut {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    }
+    .animate-slideIn {
+      animation: slideIn 0.3s ease forwards;
+    }
+    .animate-slideOut {
+      animation: slideOut 0.3s ease forwards;
+    }
+    button:focus-visible {
+      outline: 3px solid #fbbf24;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="max-w-6xl mx-auto p-6">
+    <!-- Header -->
+    <header class="mb-10 text-center">
+      <h1 class="text-5xl font-extrabold mb-3 drop-shadow-lg text-yellow-400 tracking-wide">
+        FSYNC Script e Hacks
+      </h1>
+      <p class="text-lg max-w-3xl mx-auto text-yellow-200 font-medium drop-shadow-md">
+        Bem-vindo ao FSYNC Plataformas Script e Hacks, onde você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+      </p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex justify-center gap-6 mb-12 flex-wrap">
+      <button
+        @click="setView('home')"
+        :class="[
+          'px-7 py-3 rounded-xl font-semibold transition shadow-md hover:shadow-lg',
+          currentView === 'home'
+            ? 'bg-yellow-400 text-gray-900 shadow-yellow-400/70'
+            : 'bg-yellow-300 text-gray-900 hover:bg-yellow-500'
+        ]"
+        aria-label="Página inicial"
+      >
+        Início
+      </button>
+      <button
+        @click="setView('sites')"
+        :class="[
+          'px-7 py-3 rounded-xl font-semibold transition shadow-md hover:shadow-lg',
+          currentView === 'sites'
+            ? 'bg-emerald-400 text-gray-900 shadow-emerald-400/70'
+            : 'bg-emerald-300 text-gray-900 hover:bg-emerald-500'
+        ]"
+        aria-label="Sites"
+      >
+        Sites
+      </button>
+      <button
+        @click="setView('scripts')"
+        :class="[
+          'px-7 py-3 rounded-xl font-semibold transition shadow-md hover:shadow-lg',
+          currentView === 'scripts'
+            ? 'bg-pink-400 text-gray-900 shadow-pink-400/70'
+            : 'bg-pink-300 text-gray-900 hover:bg-pink-500'
+        ]"
+        aria-label="Scripts"
+      >
+        Scripts
+      </button>
+      <button
+        @click="setView('about')"
+        :class="[
+          'px-7 py-3 rounded-xl font-semibold transition shadow-md hover:shadow-lg',
+          currentView === 'about'
+            ? 'bg-amber-400 text-gray-900 shadow-amber-400/70'
+            : 'bg-amber-300 text-gray-900 hover:bg-amber-500'
+        ]"
+        aria-label="Sobre"
+      >
+        Sobre
+      </button>
+      <button
+        @click="setView('team')"
+        :class="[
+          'px-7 py-3 rounded-xl font-semibold transition shadow-md hover:shadow-lg',
+          currentView === 'team'
+            ? 'bg-purple-400 text-gray-900 shadow-purple-400/70'
+            : 'bg-purple-300 text-gray-900 hover:bg-purple-500'
+        ]"
+        aria-label="Equipe"
+      >
+        Equipe
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <section>
+      <!-- Home View -->
+      <div v-if="currentView === 'home'" class="text-center space-y-8">
+        <h2 class="text-4xl font-extrabold drop-shadow-lg text-yellow-300">
+          Bem-vCo-fundaFSYNC Script e hacks
+        </h2>
+        <p class="max-w-3xl mx-auto text-yellow-200 text-xl leading-relaxed font-medium drop-shadow-md">
+          Aqui você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+        </p>
+        <div class="flex flex-wrap justify-center gap-8 mt-8">
+          <button
+            @click="setView('sites')"
+            class="bg-emerald-400 hover:bg-emerald-500 text-gray-900 font-semibold px-8 py-4 rounded-2xl shadow-lg transition transform hover:-translate-y-1"
+          >
+            📚 Sites
+          </button>
+          <button
+            @click="setView('scripts')"
+            class="bg-pink-400 hover:bg-pink-500 text-gray-900 font-semibold px-8 py-4 rounded-2xl shadow-lg transition transform hover:-translate-y-1"
+          >
+            &lt;/&gt; Scripts
+          </button>
+          <button
+            @click="setView('about')"
+            class="bg-amber-400 hover:bg-amber-500 text-gray-900 font-semibold px-8 py-4 rounded-2xl shadow-lg transition transform hover:-translate-y-1"
+          >
+            ℹ️ Sobre
+          </button>
+          <button
+            @click="setView('team')"
+            class="bg-purple-400 hover:bg-purple-500 text-gray-900 font-semibold px-8 py-4 rounded-2xl shadow-lg transition transform hover:-translate-y-1"
+          >
+            👥 Equipe
+          </button>
+        </div>
+      </div>
+
+      <!-- Sites List -->
+      <div
+        v-if="currentView === 'sites'"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+      >
+        <div
+          v-for="site in sites"
+          :key="site.id"
+          @click="openPlatform(site)"
+          tabindex="0"
+          role="button"
+          @keyup.enter="openPlatform(site)"
+          class="cursor-pointer bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-3xl p-8 shadow-2xl hover:scale-105 transform transition flex flex-col gap-4 text-gray-900"
+          :aria-label="`Abrir plataforma ${site.name}`"
+        >
+          <div class="flex items-center gap-4 font-extrabold text-2xl drop-shadow-md">
+            <i :class="site.icon"></i>
+            <span>{{ site.name }}</span>
+          </div>
+          <p class="text-emerald-100 font-semibold text-lg drop-shadow-sm">
+            {{ site.shortDesc }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Scripts List -->
+      <div
+        v-if="currentView === 'scripts'"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+      >
+        <div
+          v-for="script in scripts"
+          :key="script.id"
+          @click="openScript(script)"
+          tabindex="0"
+          role="button"
+          @keyup.enter="openScript(script)"
+          class="cursor-pointer bg-gradient-to-br from-pink-500 to-pink-700 rounded-3xl p-8 shadow-2xl hover:scale-105 transform transition flex flex-col gap-4 text-gray-900"
+          :aria-label="`Abrir script ${script.name}`"
+        >
+          <div class="flex items-center gap-4 font-extrabold text-2xl drop-shadow-md">
+            <i :class="script.icon"></i>
+            <span>{{ script.name }}</span>
+          </div>
+          <p class="text-pink-100 font-semibold text-lg drop-shadow-sm">
+            {{ script.shortDesc }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Platform Detail -->
+      <div
+        v-if="currentView === 'platformDetail'"
+        class="bg-gradient-to-br from-emerald-700 to-emerald-900 rounded-3xl p-10 shadow-2xl max-w-4xl mx-auto"
+      >
+        <button
+          @click="setView('sites')"
+          aria-label="Voltar para sites"
+          class="mb-8 bg-emerald-900 hover:bg-emerald-800 text-emerald-200 font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3"
+        >
+          <i class="fas fa-arrow-left"></i> Voltar
+        </button>
+        <h2 class="text-4xl font-extrabold mb-6 text-emerald-300 drop-shadow-lg">
+          {{ selectedPlatform.name }}
+        </h2>
+        <p class="mb-8 text-emerald-100 text-lg font-medium leading-relaxed drop-shadow-sm">
+          {{ selectedPlatform.description }}
+        </p>
+        <a
+          :href="selectedPlatform.hackLink"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block bg-emerald-900 hover:bg-emerald-800 text-emerald-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition"
+          aria-label="Abrir link do hack da plataforma"
+        >
+          Abrir Hack da Plataforma
+        </a>
+      </div>
+
+      <!-- Script Detail -->
+      <div
+        v-if="currentView === 'scriptDetail'"
+        class="bg-gradient-to-br from-pink-700 to-pink-900 rounded-3xl p-10 shadow-2xl max-w-4xl mx-auto"
+      >
+        <button
+          @click="setView('scripts')"
+          aria-label="Voltar para scripts"
+          class="mb-8 bg-pink-900 hover:bg-pink-800 text-pink-200 font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3"
+        >
+          <i class="fas fa-arrow-left"></i> Voltar
+        </button>
+        <h2 class="text-4xl font-extrabold mb-6 text-pink-300 drop-shadow-lg">
+          {{ selectedScript.name }}
+        </h2>
+        <p class="mb-8 text-pink-100 text-lg font-medium leading-relaxed drop-shadow-sm">
+          {{ selectedScript.description }}
+        </p>
+        <pre ref="codeBlock" class="select-text whitespace-pre-wrap">{{ selectedScript.code }}</pre>
+        <button
+          @click="copyCode"
+          aria-label="Copiar código do script"
+          class="mt-6 bg-pink-900 hover:bg-pink-800 text-pink-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition flex items-center gap-3"
+        >
+          <i class="fas fa-copy"></i> Copiar Código
+        </button>
+      </div>
+
+      <!-- About -->
+      <div
+        v-if="currentView === 'about'"
+        class="bg-amber-100/20 rounded-3xl p-10 shadow-2xl max-w-4xl mx-auto text-amber-900"
+      >
+        <h2 class="text-4xl font-extrabold mb-6">Sobre</h2>
+        <p class="mb-6 leading-relaxed text-lg font-medium">
+          Olá, bem-vindo ao site do CMSP Plataformas Hacks! Aqui vocês vão encontrar os melhores métodos, scripts e hacks para facilitar e automatizar suas tarefas da escola. Temos TODAS as plataformas do Sala do Futuro — então aproveitem!
+        </p>
+        <p class="leading-relaxed text-lg font-medium">
+          Nossa equipe é formada por desenvolvedores e estudantes que já utilizam essas plataformas e querem compartilhar seus conhecimentos para ajudar outros alunos a terem sucesso.
+        </p>
+      </div>
+
+      <!-- Team -->
+      <div
+        v-if="currentView === 'team'"
+        class="bg-purple-100/30 rounded-3xl p-10 shadow-2xl max-w-4xl mx-auto text-purple-900"
+      >
+        <h2 class="text-4xl font-extrabold mb-10 text-center">Equipe</h2>
+        <div class="flex flex-col sm:flex-row justify-center gap-10">
+          <div
+            class="flex items-center gap-5 bg-purple-300/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition"
+            tabindex="0"
+            role="group"
+            aria-label="CEO"
+          >
+            <div
+              class="flex flex-col items-center justify-center text-yellow-400 text-4xl font-extrabold select-none"
+              aria-hidden="true"
+            >
+              ★
+            </div>
+            <img
+              src="https://placehold.co/80x80/png?text=CEO"
+              alt="Foto do CEO em uma caixa quadrada com bordas arredondadas"
+              class="w-20 h-20 rounded-2xl object-cover shadow-md"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-2xl font-semibold">CEO</h3>
+              <p class="text-purple-800 font-medium">Lks Modder</p>
+            </div>
+          </div>
+          <div
+            class="flex items-center gap-5 bg-purple-300/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition"
+            tabindex="0"
+            role="group"
+            aria-label="Co-fundador"
+          >
+            <div
+              class="flex flex-col items-center justify-center text-yellow-400 text-4xl font-extrabold select-none"
+              aria-hidden="true"
+            >
+              ★
+            </div>
+            <img
+              src="https://placehold.co/80x80/png?text=Co-fundador"
+              alt="Foto do Co-fundador em uma caixa quadrada com bordas arredondadas"
+              class="w-20 h-20 rounded-2xl object-cover shadow-md"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-2xl font-semibold">Co-fundador</h3>
+              <p class="text-purple-800 font-medium">Lks Scripter</p>
+            </div>
+          </div>
+          <div
+            class="flex items-center gap-5 bg-purple-300/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition"
+            tabindex="0"
+            role="group"
+            aria-label="Fundador"
+          >
+            <div
+              class="flex flex-col items-center justify-center text-yellow-400 text-4xl font-extrabold select-none"
+              aria-hidden="true"
+            >
+              ★
+            </div>
+            <img
+              src="https://placehold.co/80x80/png?text=Fundador"
+              alt="Foto do Fundador em uma caixa quadrada com bordas arredondadas"
+              class="w-20 h-20 rounded-2xl object-cover shadow-md"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-2xl font-semibold">Fundador</h3>
+              <p class="text-purple-800 font-medium">DarkModde</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Toast -->
+  <div
+    v-show="showToast"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+    class="fixed bottom-8 right-8 bg-green-500 text-white px-6 py-3 rounded-2xl shadow-lg flex items-center gap-4 animate-slideIn"
+    :class="toastAnimationClass"
+  >
+    <i class="fas fa-check-circle text-xl"></i>
+    <span class="font-semibold select-none">Código copiado com sucesso!</span>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          currentView: 'home',
+          selectedPlatform: null,
+          selectedScript: null,
+          showToast: false,
+          toastAnimationClass: '',
+          sites: [
+            {
+              id: 1,
+              name: 'Sala do Futuro (Oficial)',
+              icon: 'fas fa-book-open',
+              shortDesc: 'Plataforma oficial da Sala do Futuro.',
+              description: 'A plataforma oficial Sala do Futuro, com recursos para facilitar seus estudos.',
+              hackLink: 'https://hack.sala-do-futuro-oficial.com',
+            },
+            {
+              id: 2,
+              name: 'TarefaSP ( Alternativo )',
+              icon: 'fas fa-list-alt',
+              shortDesc: 'Alternativa para TarefaSP com hacks.',
+              description: 'Versão alternativa do TarefaSP com funcionalidades extras para facilitar suas tarefas.',
+              hackLink: 'https://hack.tarefasp-alternativo.com',
+            },
+            {
+              id: 3,
+              name: 'Redação Paulista',
+              icon: 'fas fa-pen',
+              shortDesc: 'Plataforma para redações com hacks.',
+              description: 'Ferramentas para melhorar suas redações na plataforma Redação Paulista.',
+              hackLink: 'https://hack.redacaopaulista.com',
+            },
+            {
+              id: 4,
+              name: 'Expansão Noturno',
+              icon: 'fas fa-moon',
+              shortDesc: 'Hacks para a plataforma Expansão Noturno.',
+              description: 'Recursos para facilitar o uso da plataforma Expansão Noturno.',
+              hackLink: 'https://hack.expansaonoturno.com',
+            },
+            {
+              id: 5,
+              name: 'SPeak',
+              icon: 'fas fa-comments',
+              shortDesc: 'Hacks para a plataforma SPeak.',
+              description: 'Melhore sua experiência com a plataforma SPeak usando nossos hacks.',
+              hackLink: 'https://hack.speak.com',
+            },
+            {
+              id: 6,
+              name: 'Matific',
+              icon: 'fas fa-mobile-alt',
+              shortDesc: 'Hacks para Matific.',
+              description: 'Facilite suas tarefas no Matific com nossos scripts e hacks.',
+              hackLink: 'https://hack.matific.com',
+            },
+            {
+              id: 7,
+              name: 'LeiaSP',
+              icon: 'fas fa-book',
+              shortDesc: 'Hacks para LeiaSP.',
+              description: 'Aprimore sua leitura e tarefas no LeiaSP com nossos hacks.',
+              hackLink: 'https://hack.leiasp.com',
+            },
+            {
+              id: 8,
+              name: 'Alura',
+              icon: 'fas fa-laptop',
+              shortDesc: 'Hacks para Alura.',
+              description: 'Scripts para facilitar o uso da plataforma Alura.',
+              hackLink: 'https://hack.alura.com',
+            },
+          ],
+          scripts: [
+            {
+              id: 1,
+              name: 'TarefaSP',
+              icon: 'fas fa-skull',
+              shortDesc: 'Script para facilitar o uso do TarefaSP.',
+              description: 'Este script automatiza tarefas no TarefaSP para agilizar seu uso.',
+              code: `// Script para TarefaSP
+(function() {
+  alert('Script TarefaSP ativado!');
+  // Seu código aqui
+})();`,
+            },
+            {
+              id: 2,
+              name: 'Redação Paulista',
+              icon: 'fas fa-pen-square',
+              shortDesc: 'Script para Redação Paulista.',
+              description: 'Automatize e melhore suas redações com este script.',
+              code: `// Script para Redação Paulista
+(function() {
+  console.log('Script Redação Paulista ativado!');
+  // Seu código aqui
+})();`,
+            },
+            {
+              id: 3,
+              name: 'Expansão Noturno',
+              icon: 'fas fa-moon',
+              shortDesc: 'Script para Expansão Noturno.',
+              description: 'Facilite o uso da plataforma Expansão Noturno com este script.',
+              code: `// Script para Expansão Noturno
+(function() {
+  console.log('Script Expansão Noturno ativado!');
+  // Seu código aqui
+})();`,
+            },
+            {
+              id: 4,
+              name: 'Khan Academy',
+              icon: 'fas fa-graduation-cap',
+              shortDesc: 'Script para Khan Academy.',
+              description: 'Melhore sua experiência na Khan Academy com este script.',
+              code: `// Script para Khan Academy
+(function() {
+  console.log('Script Khan Academy ativado!');
+  // Seu código aqui
+})();`,
+            },
+            {
+              id: 5,
+              name: 'Alura',
+              icon: 'fas fa-laptop',
+              shortDesc: 'Script para Alura.',
+              description: 'Automatize tarefas na plataforma Alura com este script.',
+              code: `// Script para Alura
+(function() {
+  console.log('Script Alura ativado!');
+  // Seu código aqui
+})();`,
+            },
+          ],
+        };
+      },
+      methods: {
+        setView(view) {
+          this.currentView = view;
+          this.selectedPlatform = null;
+          this.selectedScript = null;
+        },
+        openPlatform(platform) {
+          this.selectedPlatform = platform;
+          this.currentView = 'platformDetail';
+        },
+        openScript(script) {
+          this.selectedScript = script;
+          this.currentView = 'scriptDetail';
+        },
+        copyCode() {
+          if (!this.selectedScript) return;
+          navigator.clipboard.writeText(this.selectedScript.code).then(() => {
+            this.showToast = true;
+            this.toastAnimationClass = 'animate-slideIn';
+            setTimeout(() => {
+              this.toastAnimationClass = 'animate-slideOut';
+              setTimeout(() => {
+                this.showToast = false;
+              }, 300);
+            }, 5000);
+          });
+        },
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>
