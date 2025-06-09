@@ -24,6 +24,7 @@
         ),
         linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       background-size: 30px 30px;
+      overflow-x: hidden;
     }
     h1,
     h2,
@@ -158,6 +159,20 @@
       text-shadow: 0 0 8px #22c55e;
     }
     /* Popup styles */
+    #donate-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 18, 18, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 9998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #donate-popup-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
     #donate-popup {
       position: fixed;
       top: 50%;
@@ -174,7 +189,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.5s ease;
-      z-index: 10000;
+      z-index: 9999;
     }
     #donate-popup.show {
       opacity: 1;
@@ -473,8 +488,10 @@
     Código copiado com sucesso!
    </span>
   </div>
+  <!-- Donation Popup Overlay -->
+  <div id="donate-popup-overlay" @click="closeDonatePopup" :class="{show: donatePopupVisible}"></div>
   <!-- Donation Popup -->
-  <div aria-describedby="donate-desc" aria-labelledby="donate-title" aria-modal="true" class="" id="donate-popup" role="dialog" tabindex="-1">
+  <div aria-describedby="donate-desc" aria-labelledby="donate-title" aria-modal="true" id="donate-popup" role="dialog" tabindex="-1" :class="{show: donatePopupVisible}">
    <button @click="closeDonatePopup" aria-label="Fechar popup de doação" class="close-btn">
     ×
    </button>
@@ -484,7 +501,7 @@
    <p id="donate-desc">
     Ajude os dono do site com quaisquer valor que queira, apenas o ajude a manter o site😊.
    </p>
-   <button @click="openDonate">
+   <button @click="handleDonateNow">
     Doar agora!
    </button>
   </div>
@@ -747,7 +764,9 @@
           this.donatePopupVisible = true;
           this.donatePopupCloseBtnVisible = false;
           const popup = document.getElementById('donate-popup');
+          const overlay = document.getElementById('donate-popup-overlay');
           popup.classList.add('show');
+          overlay.classList.add('show');
           // Show close button after 5 seconds with fade-in
           setTimeout(() => {
             this.donatePopupCloseBtnVisible = true;
@@ -767,7 +786,9 @@
           this.donatePopupVisible = false;
           this.donatePopupCloseBtnVisible = false;
           const popup = document.getElementById('donate-popup');
+          const overlay = document.getElementById('donate-popup-overlay');
           popup.classList.remove('show');
+          overlay.classList.remove('show');
           const closeBtn = popup.querySelector('.close-btn');
           if (closeBtn) {
             closeBtn.style.opacity = '0';
@@ -777,6 +798,10 @@
             clearTimeout(this.donateCloseTimeout);
             this.donateCloseTimeout = null;
           }
+        },
+        handleDonateNow() {
+          this.openDonate();
+          this.closeDonatePopup();
         },
       },
       mounted() {
@@ -794,4 +819,4 @@
     }).mount('#app');
   </script>
  </body>
-     </html>
+   </html>
