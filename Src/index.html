@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Futu Sync</title>
+  <title>CMSP Hacks</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -293,7 +293,6 @@
       transform: translateY(20px);
       transition: opacity 0.3s ease, transform 0.3s ease;
       z-index: 9999;
-      user-select: none;
     }
     #toast.show {
       opacity: 1;
@@ -338,9 +337,9 @@
 <body>
   <header>
     <h1>CMSP Hacks</h1>
-    <p>Bem-vindo ao Futu Sync onde você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.</p>
+    <p>Bem-vindo ao CMSP Plataformas Hacks, onde você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.</p>
   </header>
-  <nav role="tablist" aria-label="Navegação principal">
+  <nav aria-label="Navegação principal" class="flex justify-center gap-6 mb-12 flex-wrap" role="tablist">
     <button role="tab" id="home-tab" aria-controls="home-panel" :aria-selected="currentView === 'home'" :class="{'active': currentView === 'home'}" @click="setView('home')">Início</button>
     <button role="tab" id="sites-tab" aria-controls="sites-panel" :aria-selected="currentView === 'sites'" :class="{'active': currentView === 'sites'}" @click="setView('sites')">Sites</button>
     <button role="tab" id="scripts-tab" aria-controls="scripts-panel" :aria-selected="currentView === 'scripts'" :class="{'active': currentView === 'scripts'}" @click="setView('scripts')">Scripts</button>
@@ -354,7 +353,7 @@
   <main>
     <!-- Home -->
     <section id="home-panel" role="tabpanel" tabindex="0" aria-labelledby="home-tab" v-if="currentView === 'home'" class="text-center space-y-8">
-      <h2>Bem-vindo ao Futu Sync</h2>
+      <h2>Bem-vindo ao CMSP Hacks</h2>
       <p class="max-w-3xl mx-auto text-xl leading-relaxed font-medium">
         Aqui você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
       </p>
@@ -371,7 +370,7 @@
       <article v-for="site in sites" :key="site.id" class="card" role="button" tabindex="0" :aria-label="`Abrir plataforma ${site.name}`" @click="handlePlatformClick(site)" @keyup.enter="handlePlatformClick(site)">
         <h3><i :class="site.icon"></i> {{ site.name }}</h3>
         <p>{{ site.shortDesc }}</p>
-        <div v-if="!site.enabled" class="disabled-overlay">Indisponível no momento</div>
+        <div v-if="!status.sites" class="disabled-overlay">Indisponível no momento</div>
       </article>
     </section>
     <!-- Scripts -->
@@ -379,7 +378,7 @@
       <article v-for="script in scripts" :key="script.id" class="card" role="button" tabindex="0" :aria-label="`Abrir script ${script.name}`" @click="handleScriptClick(script)" @keyup.enter="handleScriptClick(script)">
         <h3><i :class="script.icon"></i> {{ script.name }}</h3>
         <p>{{ script.shortDesc }}</p>
-        <div v-if="!script.enabled" class="disabled-overlay">Indisponível no momento</div>
+        <div v-if="!status.scripts" class="disabled-overlay">Indisponível no momento</div>
       </article>
     </section>
     <!-- Diversos -->
@@ -387,7 +386,7 @@
       <article v-for="diverso in diversos" :key="diverso.id" class="card" role="button" tabindex="0" :aria-label="`Abrir item diversos ${diverso.name}`" @click="openDiverso(diverso)" @keyup.enter="openDiverso(diverso)">
         <h3><i :class="diverso.icon"></i> {{ diverso.name }}</h3>
         <p>{{ diverso.shortDesc }}</p>
-        <div v-if="!diverso.enabled" class="disabled-overlay">Indisponível no momento</div>
+        <div v-if="!status.diversos" class="disabled-overlay">Indisponível no momento</div>
       </article>
     </section>
     <!-- Platform Detail -->
@@ -397,7 +396,7 @@
       </button>
       <h2>{{ selectedPlatform.name }}</h2>
       <p>{{ selectedPlatform.description }}</p>
-      <a v-if="selectedPlatform.enabled" :href="selectedPlatform.hackLink" target="_blank" rel="noopener noreferrer" class="button-link" aria-label="Abrir link do hack da plataforma">Abrir Hack da Plataforma</a>
+      <a v-if="status.sites" :href="selectedPlatform.hackLink" aria-label="Abrir link do hack da plataforma" class="button-link" target="_blank" rel="noopener noreferrer">Abrir Hack da Plataforma</a>
       <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
     </section>
     <!-- Script Detail -->
@@ -407,8 +406,8 @@
       </button>
       <h2>{{ selectedScript.name }}</h2>
       <p>{{ selectedScript.description }}</p>
-      <pre ref="codeBlock" class="code-block">{{ selectedScript.code }}</pre>
-      <button v-if="selectedScript.enabled" @click="copyCode" aria-label="Copiar código do script" class="copy-btn">
+      <pre class="code-block" ref="codeBlock">{{ selectedScript.code }}</pre>
+      <button v-if="status.scripts" @click="copyCode" aria-label="Copiar código do script" class="copy-btn">
         <i class="fas fa-copy"></i> Copiar Código
       </button>
       <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
@@ -420,18 +419,18 @@
       </button>
       <h2>{{ selectedDiverso.name }}</h2>
       <p>{{ selectedDiverso.description }}</p>
-      <pre v-if="selectedDiverso.code" ref="codeBlockDiverso" class="code-block">{{ selectedDiverso.code }}</pre>
-      <button v-if="selectedDiverso.enabled && selectedDiverso.code" @click="copyCodeDiverso" aria-label="Copiar código do item diversos" class="copy-btn">
+      <pre v-if="selectedDiverso.code" class="code-block" ref="codeBlockDiverso">{{ selectedDiverso.code }}</pre>
+      <button v-if="status.diversos && selectedDiverso.code" @click="copyCodeDiverso" aria-label="Copiar código do item diversos" class="copy-btn">
         <i class="fas fa-copy"></i> Copiar Código
       </button>
-      <a v-if="selectedDiverso.enabled && selectedDiverso.hackLink" :href="selectedDiverso.hackLink" target="_blank" rel="noopener noreferrer" class="button-link" aria-label="Abrir link do hack do item diversos">Abrir Hack</a>
-      <p v-if="!selectedDiverso.enabled" class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
+      <a v-if="status.diversos && selectedDiverso.hackLink" :href="selectedDiverso.hackLink" aria-label="Abrir link do hack do item diversos" class="button-link" target="_blank" rel="noopener noreferrer">Abrir Hack</a>
+      <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
     </section>
     <!-- About -->
     <section v-if="currentView === 'about'" role="region" tabindex="0" aria-live="polite" class="detail max-w-4xl mx-auto">
       <h2>Sobre</h2>
       <p>
-        Olá, bem-vindo ao site da Futu Sync Aqui vocês vão encontrar os melhores métodos, scripts e hacks para facilitar e automatizar suas tarefas da escola. Temos TODAS as plataformas do Sala do Futuro — então aproveitem!
+        Olá, bem-vindo ao site do CMSP Plataformas Hacks! Aqui vocês vão encontrar os melhores métodos, scripts e hacks para facilitar e automatizar suas tarefas da escola. Temos TODAS as plataformas do Sala do Futuro — então aproveitem!
       </p>
       <p>
         Nossa equipe é formada por desenvolvedores e estudantes que já utilizam essas plataformas e querem compartilhar seus conhecimentos para ajudar outros alunos a terem sucesso.
@@ -471,12 +470,12 @@
     </section>
   </main>
   <!-- Toast -->
-  <div id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div id="toast" role="alert" aria-live="assertive" aria-atomic="true" class="text-green-500">
     <i class="fas fa-check-circle"></i>
     <span>Código copiado com sucesso!</span>
   </div>
   <!-- VPN Toast -->
-  <div id="vpn-toast" role="alert" aria-live="polite" aria-atomic="true" class="" aria-label="VPN detectada">
+  <div id="vpn-toast" role="alert" aria-live="polite" aria-atomic="true" class="fixed top-4 left-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 select-none" style="opacity:0; pointer-events:none; transition:opacity 0.3s ease;">
     <i class="fas fa-shield-alt"></i>
     <span>VPN detectada</span>
   </div>
@@ -496,6 +495,11 @@
           clickCount: 0,
           nextPopupThreshold: 10,
           vpnDetected: false,
+          status: {
+            sites: true,
+            scripts: true,
+            diversos: true,
+          },
           sites: [
             {
               id: 1,
@@ -504,7 +508,6 @@
               shortDesc: 'Plataforma oficial da Sala do Futuro.',
               description: 'A plataforma oficial Sala do Futuro, com recursos para facilitar seus estudos.',
               hackLink: 'https://doritus.mmrcoss.tech/',
-              enabled: true,
             },
             {
               id: 2,
@@ -513,7 +516,6 @@
               shortDesc: 'Alternativa para TarefaSP com hacks.',
               description: 'Versão alternativa do TarefaSP com funcionalidades extras para facilitar suas tarefas.',
               hackLink: 'https://darkmodde.xyz/SalaSemFuturo/',
-              enabled: false,
             },
             {
               id: 3,
@@ -522,7 +524,6 @@
               shortDesc: 'Plataforma para redações com hacks.',
               description: 'Ferramentas para melhorar suas redações na plataforma Redação Paulista.',
               hackLink: 'https://redacao.mmrcoss.tech/',
-              enabled: true,
             },
             {
               id: 4,
@@ -531,7 +532,6 @@
               shortDesc: 'Hacks para a plataforma Expansão Noturno.',
               description: 'Recursos para facilitar o uso da plataforma Expansão Noturno.',
               hackLink: 'https://expansao.mmrcoss.tech/',
-              enabled: true,
             },
             {
               id: 5,
@@ -540,7 +540,6 @@
               shortDesc: 'Hacks para a plataforma SPeak.',
               description: 'Melhore sua experiência com a plataforma SPeak usando nossos hacks.',
               hackLink: 'https://speakify.cupiditys.lol/install',
-              enabled: true,
             },
             {
               id: 6,
@@ -549,7 +548,6 @@
               shortDesc: 'Hacks para Matific.',
               description: 'Facilite suas tarefas no Matific com nossos scripts e hacks.',
               hackLink: 'https://matific.cupiditys.lol/dashboard',
-              enabled: true,
             },
             {
               id: 7,
@@ -558,7 +556,6 @@
               shortDesc: 'Hacks para LeiaSP.',
               description: 'Aprimore sua leitura e tarefas no LeiaSP com nossos hacks.',
               hackLink: 'https://leiasp.cupiditys.lol/',
-              enabled: true,
             },
             {
               id: 8,
@@ -567,7 +564,6 @@
               shortDesc: 'Hacks para Alura.',
               description: 'Scripts para facilitar o uso da plataforma Alura.',
               hackLink: 'https://alura.mmrcoss.tech/',
-              enabled: true,
             },
           ],
           scripts: [
@@ -578,7 +574,6 @@
               shortDesc: 'Script para facilitar o uso do TarefaSP.',
               description: 'Este script automatiza tarefas no TarefaSP para agilizar seu uso.',
               code: `javascript:fetch("https://corsproxy.io/?url=https://raw.githubusercontent.com/DarkModde/Dark-Scripts/refs/heads/main/TarefaResolver.js").then(t=>t.text()).then(eval);`,
-              enabled: true,
             },
             {
               id: 2,
@@ -587,7 +582,6 @@
               shortDesc: 'Script para Redação Paulista.',
               description: 'Automatize e melhore suas redações com este script.',
               code: `javascript:fetch("https://corsproxy.io/?url=https://raw.githubusercontent.com/DarkModde/Dark-Scripts/refs/heads/main/RedaSP-IA.js").then(t=>t.text()).then(eval);`,
-              enabled: true,
             },
             {
               id: 3,
@@ -596,7 +590,6 @@
               shortDesc: 'Script para Expansão Noturno.',
               description: 'Facilite o uso da plataforma Expansão Noturno com este script.',
               code: `javascript:fetch("https://corsproxy.io/?url=https://raw.githubusercontent.com/DarkModde/Dark-Scripts/refs/heads/main/ExNoturnoFDS.js").then(t=>t.text()).then(eval);`,
-              enabled: true,
             },
             {
               id: 4,
@@ -605,7 +598,6 @@
               shortDesc: 'Script para Khan Academy.',
               description: 'Melhore sua experiência na Khan Academy com este script.',
               code: `javascript:fetch("https://corsproxy.io/?url=https://raw.githubusercontent.com/DarkModde/Dark-Scripts/refs/heads/main/KhanResolver.js").then(t=>t.text()).then(eval);`,
-              enabled: true,
             },
             {
               id: 5,
@@ -621,7 +613,6 @@
 // @grant        none
 // @require      https://raw.githubusercontent.com/DarkModde/Dark-Scripts/refs/heads/main/AluraInfinity.js
 // ==/UserScript==`,
-              enabled: true,
             },
           ],
           diversos: [
@@ -637,7 +628,6 @@
   // Seu código aqui
 })();`,
               hackLink: 'https://example.com/kahoot-hack',
-              enabled: true,
             },
             {
               id: 2,
@@ -651,7 +641,6 @@
   // Seu código aqui
 })();`,
               hackLink: 'https://example.com/quizizz-hack',
-              enabled: true,
             },
             {
               id: 3,
@@ -665,7 +654,6 @@
   // Seu código aqui
 })();`,
               hackLink: 'https://example.com/google-classroom-helper',
-              enabled: true,
             },
             {
               id: 4,
@@ -679,9 +667,15 @@
   // Seu código aqui
 })();`,
               hackLink: 'https://example.com/socrative-assistente',
-              enabled: true,
             },
           ],
+          // ON/OFF status for categories
+          status: {
+            sites: true,
+            scripts: true,
+            diversos: true,
+          },
+          vpnDetected: false,
         };
       },
       methods: {
@@ -691,26 +685,32 @@
           this.selectedScript = null;
           this.selectedDiverso = null;
         },
-        openPlatform(platform) {
-          if (!platform.enabled) {
+        handlePlatformClick(site) {
+          if (!this.status.sites) {
             this.showUnavailableToast();
             return;
           }
+          this.openPlatform(site);
+          this.incrementClickCount();
+        },
+        openPlatform(platform) {
           this.selectedPlatform = platform;
           this.currentView = 'platformDetail';
+        },
+        handleScriptClick(script) {
+          if (!this.status.scripts) {
+            this.showUnavailableToast();
+            return;
+          }
+          this.openScript(script);
           this.incrementClickCount();
         },
         openScript(script) {
-          if (!script.enabled) {
-            this.showUnavailableToast();
-            return;
-          }
           this.selectedScript = script;
           this.currentView = 'scriptDetail';
-          this.incrementClickCount();
         },
         openDiverso(diverso) {
-          if (!diverso.enabled) {
+          if (!this.status.diversos) {
             this.showUnavailableToast();
             return;
           }
@@ -719,20 +719,22 @@
           this.incrementClickCount();
         },
         copyCode() {
-          if (!this.selectedScript || !this.selectedScript.enabled) {
+          if (!this.status.scripts) {
             this.showUnavailableToast();
             return;
           }
+          if (!this.selectedScript) return;
           navigator.clipboard.writeText(this.selectedScript.code).then(() => {
             this.showToastMessage();
             this.incrementClickCount();
           });
         },
         copyCodeDiverso() {
-          if (!this.selectedDiverso || !this.selectedDiverso.enabled) {
+          if (!this.status.diversos) {
             this.showUnavailableToast();
             return;
           }
+          if (!this.selectedDiverso) return;
           navigator.clipboard.writeText(this.selectedDiverso.code).then(() => {
             this.showToastMessage();
             this.incrementClickCount();
@@ -755,6 +757,7 @@
           toastEl.classList.remove('text-red-500');
           toastEl.classList.add('text-green-500');
           toastEl.classList.add('show');
+          toastEl.querySelector('span').textContent = 'Código copiado com sucesso!';
           this.toastTimeout = setTimeout(() => {
             toastEl.classList.remove('show');
             this.showToast = false;
@@ -772,7 +775,6 @@
           toastEl.querySelector('span').textContent = 'Indisponível no momento';
           this.toastTimeout = setTimeout(() => {
             toastEl.classList.remove('show');
-            toastEl.querySelector('span').textContent = 'Código copiado com sucesso!';
             this.showToast = false;
           }, 3000);
         },
@@ -780,11 +782,9 @@
           window.open('https://pixgg.com/Lks_modder', '_blank', 'noopener');
         },
         detectVPN() {
-          // Use a free IP geolocation API to detect VPN/proxy
           fetch('https://ipapi.co/json/')
             .then(res => res.json())
             .then(data => {
-              // ipapi.co returns "proxy" boolean for VPN/proxy detection
               if (data.proxy === true || data.vpn === true) {
                 this.vpnDetected = true;
                 this.showVPNToast();
@@ -799,16 +799,24 @@
         showVPNToast() {
           const vpnToast = document.getElementById('vpn-toast');
           vpnToast.classList.add('show');
-          setTimeout(() => {
-            vpnToast.classList.remove('show');
-          }, 5000);
+        },
+        hideVPNToast() {
+          const vpnToast = document.getElementById('vpn-toast');
+          vpnToast.classList.remove('show');
+        },
+      },
+      watch: {
+        vpnDetected(newVal) {
+          if (newVal) {
+            this.showVPNToast();
+          } else {
+            this.hideVPNToast();
+          }
         },
       },
       mounted() {
-        // Ensure toast is hidden initially
         const toastEl = document.getElementById('toast');
         toastEl.classList.remove('show');
-        // Detect VPN on load
         this.detectVPN();
       },
     }).mount('#app');
@@ -818,4 +826,4 @@
     <span>VPN detectada</span>
   </div>
 </body>
- </html>
+</html>
