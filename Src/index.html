@@ -303,185 +303,258 @@
       font-size: 1.5rem;
       text-shadow: 0 0 8px #22c55e;
     }
-    /* VPN toast */
-    #vpn-toast {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      background-color: #facc15;
-      color: #1f2937;
-      padding: 0.5rem 1rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px #facc15aa;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 600;
-      user-select: none;
-      z-index: 10000;
-      font-size: 0.9rem;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    #vpn-toast.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #vpn-toast i {
-      font-size: 1.25rem;
-      filter: drop-shadow(0 0 3px #facc15);
-    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>CMSP Hacks</h1>
-    <p>Bem-vindo ao CMSP Plataformas Hacks, onde você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.</p>
-  </header>
-  <nav aria-label="Navegação principal" class="flex justify-center gap-6 mb-12 flex-wrap" role="tablist">
-    <button role="tab" id="home-tab" aria-controls="home-panel" :aria-selected="currentView === 'home'" :class="{'active': currentView === 'home'}" @click="setView('home')">Início</button>
-    <button role="tab" id="sites-tab" aria-controls="sites-panel" :aria-selected="currentView === 'sites'" :class="{'active': currentView === 'sites'}" @click="setView('sites')">Sites</button>
-    <button role="tab" id="scripts-tab" aria-controls="scripts-panel" :aria-selected="currentView === 'scripts'" :class="{'active': currentView === 'scripts'}" @click="setView('scripts')">Scripts</button>
-    <button role="tab" id="diversos-tab" aria-controls="diversos-panel" :aria-selected="currentView === 'diversos'" :class="{'active': currentView === 'diversos'}" @click="setView('diversos')">Diversos</button>
-    <button role="tab" id="about-tab" aria-controls="about-panel" :aria-selected="currentView === 'about'" :class="{'active': currentView === 'about'}" @click="setView('about')">Sobre</button>
-    <button role="tab" id="team-tab" aria-controls="team-panel" :aria-selected="currentView === 'team'" :class="{'active': currentView === 'team'}" @click="setView('team')">Equipe</button>
-    <button type="button" aria-label="Doações" class="bg-lime-500 hover:bg-lime-600 text-gray-900 font-semibold px-6 py-3 rounded-xl shadow-lg transition" @click="openDonate">
-      <i class="fas fa-hand-holding-heart"></i> Doação
+  <div class="max-w-6xl mx-auto p-6" id="app">
+   <!-- Header -->
+   <header class="mb-10 text-center">
+    <h1>
+     CMSP Hacks
+    </h1>
+    <p class="text-lg max-w-3xl mx-auto font-medium">
+     Bem-vindo ao CMSP Plataformas Hacks, onde você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+    </p>
+   </header>
+   <!-- Navigation Tabs -->
+   <nav aria-label="Navegação principal" class="flex justify-center gap-6 mb-12 flex-wrap" role="tablist">
+    <button :aria-selected="currentView === 'home'" :class="{'active': currentView === 'home'}" @click="setView('home')" aria-controls="home-panel" id="home-tab" role="tab">
+     Início
     </button>
-  </nav>
-  <main>
-    <!-- Home -->
-    <section id="home-panel" role="tabpanel" tabindex="0" aria-labelledby="home-tab" v-if="currentView === 'home'" class="text-center space-y-8">
-      <h2>Bem-vindo ao CMSP Hacks</h2>
-      <p class="max-w-3xl mx-auto text-xl leading-relaxed font-medium">
-        Aqui você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+    <button :aria-selected="currentView === 'sites'" :class="{'active': currentView === 'sites'}" @click="setView('sites')" aria-controls="sites-panel" id="sites-tab" role="tab">
+     Sites
+    </button>
+    <button :aria-selected="currentView === 'scripts'" :class="{'active': currentView === 'scripts'}" @click="setView('scripts')" aria-controls="scripts-panel" id="scripts-tab" role="tab">
+     Scripts
+    </button>
+    <button :aria-selected="currentView === 'diversos'" :class="{'active': currentView === 'diversos'}" @click="setView('diversos')" aria-controls="diversos-panel" id="diversos-tab" role="tab">
+     Diversos
+    </button>
+    <button :aria-selected="currentView === 'about'" :class="{'active': currentView === 'about'}" @click="setView('about')" aria-controls="about-panel" id="about-tab" role="tab">
+     Sobre
+    </button>
+    <button :aria-selected="currentView === 'team'" :class="{'active': currentView === 'team'}" @click="setView('team')" aria-controls="team-panel" id="team-tab" role="tab">
+     Equipe
+    </button>
+    <button @click="openDonate" aria-label="Doações" class="bg-lime-500 hover:bg-lime-600 text-gray-900 font-semibold px-6 py-3 rounded-xl shadow-lg transition" type="button">
+     <i class="fas fa-hand-holding-heart">
+     </i>
+     Doação
+    </button>
+   </nav>
+   <!-- Main Content -->
+   <section>
+    <!-- Home View -->
+    <div aria-labelledby="home-tab" class="text-center space-y-8" id="home-panel" role="tabpanel" tabindex="0" v-if="currentView === 'home'">
+     <h2>
+      Bem-vindo ao CMSP Hacks
+     </h2>
+     <p class="max-w-3xl mx-auto text-xl leading-relaxed font-medium">
+      Aqui você encontra os melhores métodos, scripts e hacks para facilitar suas tarefas escolares.
+     </p>
+     <div class="flex flex-wrap justify-center gap-8 mt-8">
+      <button @click="setView('sites')">
+       🔎 Sites
+      </button>
+      <button @click="setView('scripts')">
+       &lt;/&gt; Scripts
+      </button>
+      <button @click="setView('diversos')">
+       🎉 Diversos
+      </button>
+      <button @click="setView('about')">
+       ℹ️ Sobre
+      </button>
+      <button @click="setView('team')">
+       👥 Equipe
+      </button>
+     </div>
+    </div>
+    <!-- Sites List -->
+    <div aria-labelledby="sites-tab" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="sites-panel" role="tabpanel" tabindex="0" v-if="currentView === 'sites'">
+     <div :aria-label="`Abrir plataforma ${site.name}`" :key="site.id" @click="handlePlatformClick(site)" @keyup.enter="handlePlatformClick(site)" class="card" role="button" tabindex="0" v-for="site in sites">
+      <h3>
+       <i :class="site.icon">
+       </i>
+       {{ site.name }}
+      </h3>
+      <p>
+       {{ site.shortDesc }}
       </p>
-      <div class="flex flex-wrap justify-center gap-8 mt-8">
-        <button @click="setView('sites')">🔎 Sites</button>
-        <button @click="setView('scripts')">&lt;/&gt; Scripts</button>
-        <button @click="setView('diversos')">🎉 Diversos</button>
-        <button @click="setView('about')">ℹ️ Sobre</button>
-        <button @click="setView('team')">👥 Equipe</button>
-      </div>
-    </section>
-    <!-- Sites -->
-    <section id="sites-panel" role="tabpanel" tabindex="0" aria-labelledby="sites-tab" v-if="currentView === 'sites'" class="grid-cards">
-      <article v-for="site in sites" :key="site.id" class="card" role="button" tabindex="0" :aria-label="`Abrir plataforma ${site.name}`" @click="handlePlatformClick(site)" @keyup.enter="handlePlatformClick(site)">
-        <h3><i :class="site.icon"></i> {{ site.name }}</h3>
-        <p>{{ site.shortDesc }}</p>
-        <div v-if="!status.sites" class="disabled-overlay">Indisponível no momento</div>
-      </article>
-    </section>
-    <!-- Scripts -->
-    <section id="scripts-panel" role="tabpanel" tabindex="0" aria-labelledby="scripts-tab" v-if="currentView === 'scripts'" class="grid-cards">
-      <article v-for="script in scripts" :key="script.id" class="card" role="button" tabindex="0" :aria-label="`Abrir script ${script.name}`" @click="handleScriptClick(script)" @keyup.enter="handleScriptClick(script)">
-        <h3><i :class="script.icon"></i> {{ script.name }}</h3>
-        <p>{{ script.shortDesc }}</p>
-        <div v-if="!status.scripts" class="disabled-overlay">Indisponível no momento</div>
-      </article>
-    </section>
-    <!-- Diversos -->
-    <section id="diversos-panel" role="tabpanel" tabindex="0" aria-labelledby="diversos-tab" v-if="currentView === 'diversos'" class="grid-cards">
-      <article v-for="diverso in diversos" :key="diverso.id" class="card" role="button" tabindex="0" :aria-label="`Abrir item diversos ${diverso.name}`" @click="openDiverso(diverso)" @keyup.enter="openDiverso(diverso)">
-        <h3><i :class="diverso.icon"></i> {{ diverso.name }}</h3>
-        <p>{{ diverso.shortDesc }}</p>
-        <div v-if="!status.diversos" class="disabled-overlay">Indisponível no momento</div>
-      </article>
-    </section>
+      <div v-if="!status.sites" class="disabled-overlay">Indisponível no momento</div>
+     </div>
+    </div>
+    <!-- Scripts List -->
+    <div aria-labelledby="scripts-tab" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="scripts-panel" role="tabpanel" tabindex="0" v-if="currentView === 'scripts'">
+     <div :aria-label="`Abrir script ${script.name}`" :key="script.id" @click="handleScriptClick(script)" @keyup.enter="handleScriptClick(script)" class="card" role="button" tabindex="0" v-for="script in scripts">
+      <h3>
+       <i :class="script.icon">
+       </i>
+       {{ script.name }}
+      </h3>
+      <p>
+       {{ script.shortDesc }}
+      </p>
+      <div v-if="!status.scripts" class="disabled-overlay">Indisponível no momento</div>
+     </div>
+    </div>
+    <!-- Diversos List -->
+    <div aria-labelledby="diversos-tab" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="diversos-panel" role="tabpanel" tabindex="0" v-if="currentView === 'diversos'">
+     <div :aria-label="`Abrir item diversos ${diverso.name}`" :key="diverso.id" @click="openDiverso(diverso)" @keyup.enter="openDiverso(diverso)" class="card" role="button" tabindex="0" v-for="diverso in diversos">
+      <h3>
+       <i :class="diverso.icon">
+       </i>
+       {{ diverso.name }}
+      </h3>
+      <p>
+       {{ diverso.shortDesc }}
+      </p>
+      <div v-if="!status.diversos" class="disabled-overlay">Indisponível no momento</div>
+     </div>
+    </div>
     <!-- Platform Detail -->
-    <section v-if="currentView === 'platformDetail'" role="region" tabindex="0" aria-live="polite" class="detail max-w-4xl mx-auto">
-      <button @click="setView('sites')" aria-label="Voltar para sites" class="copy-btn mb-6 flex items-center gap-2">
-        <i class="fas fa-arrow-left"></i> Voltar
-      </button>
-      <h2>{{ selectedPlatform.name }}</h2>
-      <p>{{ selectedPlatform.description }}</p>
-      <a v-if="status.sites" :href="selectedPlatform.hackLink" aria-label="Abrir link do hack da plataforma" class="button-link" target="_blank" rel="noopener noreferrer">Abrir Hack da Plataforma</a>
-      <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
-    </section>
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'platformDetail'">
+     <button @click="setView('sites')" aria-label="Voltar para sites" class="mb-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-arrow-left">
+      </i>
+      Voltar
+     </button>
+     <h2 class="text-3xl font-extrabold mb-6 text-purple-300 drop-shadow-lg">
+      {{ selectedPlatform.name }}
+     </h2>
+     <p class="mb-8 text-purple-100 text-lg font-medium leading-relaxed drop-shadow-sm">
+      {{ selectedPlatform.description }}
+     </p>
+     <a v-if="status.sites" :href="selectedPlatform.hackLink" aria-label="Abrir link do hack da plataforma" class="inline-block bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition" rel="noopener noreferrer" target="_blank">
+      Abrir Hack da Plataforma
+     </a>
+     <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
+    </div>
     <!-- Script Detail -->
-    <section v-if="currentView === 'scriptDetail'" role="region" tabindex="0" aria-live="polite" class="detail max-w-4xl mx-auto">
-      <button @click="setView('scripts')" aria-label="Voltar para scripts" class="copy-btn mb-6 flex items-center gap-2">
-        <i class="fas fa-arrow-left"></i> Voltar
-      </button>
-      <h2>{{ selectedScript.name }}</h2>
-      <p>{{ selectedScript.description }}</p>
-      <pre class="code-block" ref="codeBlock">{{ selectedScript.code }}</pre>
-      <button v-if="status.scripts" @click="copyCode" aria-label="Copiar código do script" class="copy-btn">
-        <i class="fas fa-copy"></i> Copiar Código
-      </button>
-      <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
-    </section>
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'scriptDetail'">
+     <button @click="setView('scripts')" aria-label="Voltar para scripts" class="mb-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-arrow-left">
+      </i>
+      Voltar
+     </button>
+     <h2 class="text-3xl font-extrabold mb-6 text-purple-300 drop-shadow-lg">
+      {{ selectedScript.name }}
+     </h2>
+     <p class="mb-8 text-purple-100 text-lg font-medium leading-relaxed drop-shadow-sm">
+      {{ selectedScript.description }}
+     </p>
+     <pre class="select-text whitespace-pre-wrap" ref="codeBlock">{{ selectedScript.code }}</pre>
+     <button v-if="status.scripts" @click="copyCode" aria-label="Copiar código do script" class="mt-6 bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-copy">
+      </i>
+      Copiar Código
+     </button>
+     <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
+    </div>
     <!-- Diversos Detail -->
-    <section v-if="currentView === 'diversoDetail'" role="region" tabindex="0" aria-live="polite" class="detail max-w-4xl mx-auto">
-      <button @click="setView('diversos')" aria-label="Voltar para diversos" class="copy-btn mb-6 flex items-center gap-2">
-        <i class="fas fa-arrow-left"></i> Voltar
-      </button>
-      <h2>{{ selectedDiverso.name }}</h2>
-      <p>{{ selectedDiverso.description }}</p>
-      <pre v-if="selectedDiverso.code" class="code-block" ref="codeBlockDiverso">{{ selectedDiverso.code }}</pre>
-      <button v-if="status.diversos && selectedDiverso.code" @click="copyCodeDiverso" aria-label="Copiar código do item diversos" class="copy-btn">
-        <i class="fas fa-copy"></i> Copiar Código
-      </button>
-      <a v-if="status.diversos && selectedDiverso.hackLink" :href="selectedDiverso.hackLink" aria-label="Abrir link do hack do item diversos" class="button-link" target="_blank" rel="noopener noreferrer">Abrir Hack</a>
-      <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
-    </section>
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'diversoDetail'">
+     <button @click="setView('diversos')" aria-label="Voltar para diversos" class="mb-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-arrow-left">
+      </i>
+      Voltar
+     </button>
+     <h2 class="text-3xl font-extrabold mb-6 text-purple-300 drop-shadow-lg">
+      {{ selectedDiverso.name }}
+     </h2>
+     <p class="mb-8 text-purple-100 text-lg font-medium leading-relaxed drop-shadow-sm">
+      {{ selectedDiverso.description }}
+     </p>
+     <pre class="select-text whitespace-pre-wrap" ref="codeBlockDiverso" v-if="selectedDiverso.code">{{ selectedDiverso.code }}</pre>
+     <button v-if="status.diversos && selectedDiverso.code" @click="copyCodeDiverso" aria-label="Copiar código do item diversos" class="mt-6 bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition flex items-center gap-3">
+      <i class="fas fa-copy">
+      </i>
+      Copiar Código
+     </button>
+     <a v-if="status.diversos && selectedDiverso.hackLink" :href="selectedDiverso.hackLink" aria-label="Abrir link do hack do item diversos" class="inline-block mt-6 bg-purple-700 hover:bg-purple-800 text-purple-200 font-semibold px-8 py-4 rounded-2xl shadow-lg transition" rel="noopener noreferrer" target="_blank">
+      Abrir Hack
+     </a>
+     <p v-else class="text-red-400 font-semibold mt-4">Indisponível no momento</p>
+    </div>
     <!-- About -->
-    <section v-if="currentView === 'about'" role="region" tabindex="0" aria-live="polite" class="detail max-w-4xl mx-auto">
-      <h2>Sobre</h2>
-      <p>
-        Olá, bem-vindo ao site do CMSP Plataformas Hacks! Aqui vocês vão encontrar os melhores métodos, scripts e hacks para facilitar e automatizar suas tarefas da escola. Temos TODAS as plataformas do Sala do Futuro — então aproveitem!
-      </p>
-      <p>
-        Nossa equipe é formada por desenvolvedores e estudantes que já utilizam essas plataformas e querem compartilhar seus conhecimentos para ajudar outros alunos a terem sucesso.
-      </p>
-    </section>
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'about'">
+     <h2>
+      Sobre
+     </h2>
+     <p class="mb-6 leading-relaxed text-lg font-medium">
+      Olá, bem-vindo ao site do Futu SYNC! Aqui vocês vão encontrar os melhores métodos, scripts e hacks para facilitar e automatizar suas tarefas da escola. Temos TODAS as plataformas do Sala do Futuro — então aproveitem!
+     </p>
+     <p class="leading-relaxed text-lg font-medium">
+      Nossa equipe é formada por desenvolvedores e estudantes que já utilizam essas plataformas e querem compartilhar seus conhecimentos para ajudar outros alunos a terem sucesso.
+     </p>
+    </div>
     <!-- Team -->
-    <section v-if="currentView === 'team'" role="region" tabindex="0" aria-live="polite" class="detail max-w-4xl mx-auto">
-      <h2>Equipe</h2>
-      <div class="team-container">
-        <article aria-label="CEO" role="group" tabindex="0" class="team-card">
-          <svg aria-hidden="true" class="team-icon crown-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
-            <path d="M2 9l3 12h14l3-12-5 5-4-7-4 7-5-5z"></path>
-          </svg>
-          <img class="team-img" src="https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg" alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" width="80" height="80" loading="lazy" />
-          <div class="team-info">
-            <h3>CEO</h3>
-            <p>Lks Modder</p>
-          </div>
-        </article>
-        <article aria-label="Fundador" role="group" tabindex="0" class="team-card">
-          <div class="select-none text-yellow-400 text-4xl font-extrabold">★</div>
-          <img class="team-img" src="https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg" alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" width="80" height="80" loading="lazy" />
-          <div class="team-info">
-            <h3>Fundador</h3>
-            <p>Lks Modder</p>
-          </div>
-        </article>
-        <article aria-label="Apelido do Criador" role="group" tabindex="0" class="team-card">
-          <div class="select-none text-yellow-400 text-4xl font-extrabold">👤</div>
-          <img class="team-img" src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Foto de um brigadeiro em uma caixa quadrada com bordas arredondadas" width="80" height="80" loading="lazy" />
-          <div class="team-info">
-            <h3>Apelido do Criador</h3>
-            <p>Brigadeirão</p>
-          </div>
-        </article>
+    <div aria-live="polite" class="card max-w-4xl mx-auto" role="region" tabindex="0" v-if="currentView === 'team'">
+     <h2>
+      Equipe
+     </h2>
+     <div class="flex flex-col sm:flex-row justify-center gap-10">
+      <div aria-label="CEO" class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition" role="group" tabindex="0">
+       <div aria-hidden="true" class="select-none" style="width: 40px; height: 40px;">
+        <!-- Crown SVG -->
+        <svg aria-hidden="true" class="crown-icon" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M2 9l3 12h14l3-12-5 5-4-7-4 7-5-5z">
+         </path>
+        </svg>
+       </div>
+       <img alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg" width="80"/>
+       <div>
+        <h3 class="text-2xl font-semibold">
+         CEO
+        </h3>
+        <p class="text-yellow-300 font-medium">
+         Lks Modder
+        </p>
+       </div>
       </div>
-    </section>
-  </main>
+      <div aria-label="Fundador" class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition" role="group" tabindex="0">
+       <div aria-hidden="true" class="select-none text-yellow-400 text-4xl font-extrabold">
+        ★
+       </div>
+       <img alt="Foto de um gato em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg" width="80"/>
+       <div>
+        <h3 class="text-2xl font-semibold">
+         Fundador
+        </h3>
+        <p class="text-yellow-300 font-medium">
+         Lks Modder
+        </p>
+       </div>
+      </div>
+      <div aria-label="Apelido do Criador" class="flex items-center gap-5 bg-purple-700/40 rounded-3xl p-6 w-full sm:w-72 shadow-lg hover:scale-105 transform transition" role="group" tabindex="0">
+       <div aria-hidden="true" class="select-none text-yellow-400 text-4xl font-extrabold">
+        👤
+       </div>
+       <img alt="Foto de um brigadeiro em uma caixa quadrada com bordas arredondadas" class="w-20 h-20 rounded-2xl object-cover shadow-md" height="80" loading="lazy" src="https://cdn-icons-png.flaticon.com/512/616/616408.png" width="80"/>
+       <div>
+        <h3 class="text-2xl font-semibold">
+         Apelido do Criador
+        </h3>
+        <p class="text-yellow-300 font-medium">
+         Brigadeirão
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+  </div>
   <!-- Toast -->
-  <div id="toast" role="alert" aria-live="assertive" aria-atomic="true" class="text-green-500">
-    <i class="fas fa-check-circle"></i>
-    <span>Código copiado com sucesso!</span>
+  <div aria-atomic="true" aria-live="assertive" class="" id="toast" role="alert">
+   <i class="fas fa-check-circle">
+   </i>
+   <span>
+    Código copiado com sucesso!
+   </span>
   </div>
-  <!-- VPN Toast -->
-  <div id="vpn-toast" role="alert" aria-live="polite" aria-atomic="true" class="fixed top-4 left-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 select-none" style="opacity:0; pointer-events:none; transition:opacity 0.3s ease;">
-    <i class="fas fa-shield-alt"></i>
-    <span>VPN detectada</span>
-  </div>
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js">
+  </script>
   <script>
-    const { createApp } = Vue;
+   const { createApp } = Vue;
 
     createApp({
       data() {
@@ -494,7 +567,6 @@
           toastTimeout: null,
           clickCount: 0,
           nextPopupThreshold: 10,
-          vpnDetected: false,
           status: {
             sites: true,
             scripts: true,
@@ -675,7 +747,6 @@
             scripts: true,
             diversos: true,
           },
-          vpnDetected: false,
         };
       },
       methods: {
@@ -781,49 +852,13 @@
         openDonate() {
           window.open('https://pixgg.com/Lks_modder', '_blank', 'noopener');
         },
-        detectVPN() {
-          fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(data => {
-              if (data.proxy === true || data.vpn === true) {
-                this.vpnDetected = true;
-                this.showVPNToast();
-              } else {
-                this.vpnDetected = false;
-              }
-            })
-            .catch(() => {
-              this.vpnDetected = false;
-            });
-        },
-        showVPNToast() {
-          const vpnToast = document.getElementById('vpn-toast');
-          vpnToast.classList.add('show');
-        },
-        hideVPNToast() {
-          const vpnToast = document.getElementById('vpn-toast');
-          vpnToast.classList.remove('show');
-        },
-      },
-      watch: {
-        vpnDetected(newVal) {
-          if (newVal) {
-            this.showVPNToast();
-          } else {
-            this.hideVPNToast();
-          }
-        },
       },
       mounted() {
+        // Ensure toast is hidden initially
         const toastEl = document.getElementById('toast');
         toastEl.classList.remove('show');
-        this.detectVPN();
       },
     }).mount('#app');
   </script>
-  <div id="vpn-toast" role="alert" aria-live="polite" aria-atomic="true" class="fixed top-4 left-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 select-none" style="opacity:0; pointer-events:none; transition:opacity 0.3s ease;">
-    <i class="fas fa-shield-alt"></i>
-    <span>VPN detectada</span>
-  </div>
 </body>
-</html>
+        </html>
